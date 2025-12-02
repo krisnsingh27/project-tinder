@@ -32,7 +32,7 @@ export default function Login() {
       <h2 style={{ textAlign: "center", marginBottom: 20 }}>Login</h2>
 
       {isAuthenticated && (
-        <p style={{ color: "green", textAlign: "center" }}>✅ Logged In!</p>
+        <p style={{ color: "green", textAlign: "center" }}>Logged In!</p>
       )}
 
       {error && (

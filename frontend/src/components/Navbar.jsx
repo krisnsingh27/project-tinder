@@ -70,7 +70,10 @@ export default function Navbar() {
         <div className="nav-links">
           <Link to="/">Signup</Link>
           <Link to="/login">Login</Link>
-          {/* <Link to='feed'>Feed</Link> */}
+          <Link to='feed'>Feed</Link>
+          <Link to='viewrequest'>viewRequest</Link>
+          <Link to='friendlist'>FriendList</Link>
+          <Link to='profile'>ProfilePage</Link>
           <button onClick={handleLogout} className="logout-btn">
             Logout
           </button>

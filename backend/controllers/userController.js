@@ -6,33 +6,71 @@ const Connection = require("../models/Connection")
 
 
 
+// exports.getFeed = async (req, res) => {
+//   try {
+//     const meId = req.user.id;
+
+   
+//     const acceptedConnections = await Connection.find({
+//       status: "accepted",
+//       $or: [{ fromUser: meId }, { toUser: meId }]
+//     });
+
+    
+//     const friendIds = acceptedConnections.map(conn =>
+//       conn.fromUser.toString() === meId ? conn.toUser : conn.fromUser
+//     );
+
+  
+//     const me = await User.findById(meId);
+//     if (!me) return res.status(404).json({ message: "User not found" });
+
+//     const ignoredIds = (me.ignoredUsers || []).map(id => id.toString());
+//     const rejectedIds = (me.rejectedUsers || []).map(id => id.toString());
+    
+
+   
+//     const excludeList = [meId, ...friendIds, ...ignoredIds, ...rejectedIds];
+
+  
+//     const others = await User.find({ _id: { $nin: excludeList } })
+//       .select("name age gender bio hobbies");
+
+    
+//     const shuffled = others.sort(() => Math.random() - 0.5);
+
+//     res.json({ message: "User feed", data: shuffled });
+
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
 exports.getFeed = async (req, res) => {
   try {
     const meId = req.user.id;
 
    
-    const acceptedConnections = await Connection.find({
-      status: "accepted",
+    const connections = await Connection.find({
       $or: [{ fromUser: meId }, { toUser: meId }]
     });
 
-    
-    const friendIds = acceptedConnections.map(conn =>
-      conn.fromUser.toString() === meId ? conn.toUser : conn.fromUser
+  
+    const connectedIds = connections.map(conn =>
+      conn.fromUser.toString() === meId ? conn.toUser.toString() : conn.fromUser.toString()
     );
 
-  
+    
     const me = await User.findById(meId);
     if (!me) return res.status(404).json({ message: "User not found" });
 
     const ignoredIds = (me.ignoredUsers || []).map(id => id.toString());
     const rejectedIds = (me.rejectedUsers || []).map(id => id.toString());
-    
-
-   
-    const excludeList = [meId, ...friendIds, ...ignoredIds, ...rejectedIds];
 
   
+    const excludeList = [meId, ...connectedIds, ...ignoredIds, ...rejectedIds, ...connectedIds];
+
+    
     const others = await User.find({ _id: { $nin: excludeList } })
       .select("name age gender bio hobbies");
 
@@ -45,7 +83,6 @@ exports.getFeed = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 
 

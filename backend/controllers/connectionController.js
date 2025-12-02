@@ -286,10 +286,43 @@ exports.ignoreUser = async (req, res) => {
   }
 };
 
+// exports.getConnections = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+
+//     const connections = await Connection.find({
+//       status: "accepted",
+//       $or: [{ fromUser: userId }, { toUser: userId }]
+//     })
+//     .populate("fromUser", "-password")
+//     .populate("toUser", "-password");
+
+//     const me = await User.findById(userId);
+//     const ignored = me?.ignoredUsers?.map(id => id.toString()) || [];
+
+//     const friends = connections
+//       .map(conn => (conn.fromUser._id.toString() === userId ? conn.toUser : conn.fromUser))
+//       .filter(friend => !ignored.includes(friend._id.toString()));
+
+//     res.json({ message: "Accepted friends", data: friends });
+
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
+
+
+
 exports.getConnections = async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     const userId = req.user.id;
 
+   
     const connections = await Connection.find({
       status: "accepted",
       $or: [{ fromUser: userId }, { toUser: userId }]
@@ -297,16 +330,38 @@ exports.getConnections = async (req, res) => {
     .populate("fromUser", "-password")
     .populate("toUser", "-password");
 
+  
     const me = await User.findById(userId);
-    const ignored = me?.ignoredUsers?.map(id => id.toString()) || [];
+    const ignored = Array.isArray(me?.ignoredUsers) ? me.ignoredUsers.map(id => id.toString()) : [];
 
+   
     const friends = connections
-      .map(conn => (conn.fromUser._id.toString() === userId ? conn.toUser : conn.fromUser))
-      .filter(friend => !ignored.includes(friend._id.toString()));
+      .map(conn => {
+        if (!conn.fromUser || !conn.toUser) return null; // skip deleted users
+        return conn.fromUser._id.toString() === userId ? conn.toUser : conn.fromUser;
+      })
+      .filter(friend => friend && !ignored.includes(friend._id.toString()));
 
     res.json({ message: "Accepted friends", data: friends });
 
   } catch (err) {
+    console.error("Error in getConnections:", err);
     res.status(500).json({ error: err.message });
+  }
+};
+
+
+exports.getReceivedRequests = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const requests = await Connection.find({
+      toUser: userId,
+      status: "pending",
+    }).populate("fromUser", "name email");
+
+    res.json({ success: true, data: requests });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

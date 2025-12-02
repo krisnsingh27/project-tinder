@@ -98,6 +98,8 @@ const Signup = () => {
         <button type="submit" disabled={loading}>
           {loading ? "Signing up..." : "Sign Up"}
         </button>
+
+        
       </form>
     </div>
   );

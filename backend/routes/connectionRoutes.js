@@ -9,7 +9,8 @@ const {
     acceptRequest,
     rejectRequest,
     ignoreUser,
-    getConnections
+    getConnections,getReceivedRequests
+
 } = require("../controllers/connectionController");
 
 router.post("/request/:id", auth, sendRequest);
@@ -18,7 +19,9 @@ router.put("/reject/:id", auth, rejectRequest);
 router.put("/ignore/:id", auth, ignoreUser);
 
 
+
 router.get("/friends", auth, getConnections);
+router.get("/requests/received", auth, getReceivedRequests);
 
 module.exports = router;
 
