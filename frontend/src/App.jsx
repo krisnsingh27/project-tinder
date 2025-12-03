@@ -6,7 +6,8 @@ import Navbar from "./components/Navbar";
 import Feed from "./pages/Feed"
 import ViewRequests from "./pages/ViewRequests";
 import FriendList from "./pages/FriendList";
-// import ProfilePage from "./pages/ProfilePage"
+import ProfilePage from "./pages/ProfilePage"
+import "./App.css"
     
 function App() {
   return (
@@ -14,11 +15,11 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/feed" element={<Feed/>}/>
-        <Route path="/" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<Login />} />
         <Route path="/viewrequest" element={<ViewRequests />} />
           <Route path="/friendlist" element={<FriendList />} />
-          {/* <Route path="/profile" element={<ProfilePage />} /> */}
+          <Route path="/profile" element={<ProfilePage />} />
 
       
       </Routes>

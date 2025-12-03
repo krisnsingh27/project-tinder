@@ -12,7 +12,7 @@ export default function Navbar() {
   const handleLogout = () => {
   
    dispatch(logoutUser())
-   navigate("/login")
+   navigate("/")
   };                      
 
   return (
@@ -20,7 +20,7 @@ export default function Navbar() {
       <style>{`
         .navbar {
           width: 100%;
-          background: #ff4458;
+          background: blue;
           padding: 12px 20px;
           display: flex;
           justify-content: space-between;
@@ -65,11 +65,11 @@ export default function Navbar() {
       `}</style>
 
       <nav className="navbar">
-        <Link to="/" className="nav-title">Tinder Clone</Link>
+        <Link to="/" className="nav-title">Friends App</Link>
 
         <div className="nav-links">
-          <Link to="/">Signup</Link>
-          <Link to="/login">Login</Link>
+          <Link to="/signup">Signup</Link>
+          <Link to="/">Login</Link>
           <Link to='feed'>Feed</Link>
           <Link to='viewrequest'>viewRequest</Link>
           <Link to='friendlist'>FriendList</Link>

@@ -3,7 +3,7 @@ import authReducer from "../features/authSlice";
 import feedReducer from "../features/feedSlice";
 import requestReducer from "../features/requestSlice";
 import friendReducer from "../features/friendSlice";
-// import profileReducer from "../features/profileSlice";
+import profileReducer from "../features/profileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +11,7 @@ export const store = configureStore({
      feed: feedReducer,
       requests: requestReducer,
        friends: friendReducer,
-      //  profile:profileReducer
+       profile:profileReducer
   },
 });
 

@@ -1,3 +1,6 @@
+
+
+
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRequests, updateRequestStatus } from "../features/requestSlice";
@@ -23,21 +26,19 @@ const ViewRequests = () => {
 
       {list.map((req) => (
         <div key={req._id} style={styles.card}>
-          <p> {req.fromUser.name}
-            {req.fromUser.age}
-        
-          </p>
+          <p style={styles.name}>{req.fromUser.name}</p>
+          <p style={styles.age}>{req.fromUser.age} years old</p>
+          {req.fromUser.gender && <p style={styles.gender}>Gender: {req.fromUser.gender}</p>}
+          {req.fromUser.bio && <p style={styles.bio}><strong>Bio:</strong> {req.fromUser.bio}</p>}
 
-          <div>
+          <div style={styles.buttonContainer}>
             <button onClick={() => handleUpdate(req._id, "accept")} style={{ ...styles.btn, background: "green" }}>
               Accept
             </button>
             <button onClick={() => handleUpdate(req._id, "reject")} style={{ ...styles.btn, background: "red" }}>
               Reject
             </button>
-            {/* <button onClick={() => handleUpdate(req._id, "ignore")} style={{ ...styles.btn, background: "gray" }}>
-              Ignore
-            </button> */}
+            
           </div>
         </div>
       ))}
@@ -48,7 +49,52 @@ const ViewRequests = () => {
 export default ViewRequests;
 
 const styles = {
-  container: { padding: 20, width: "90%", margin: "auto", fontFamily: "Arial" },
-  card: { border: "1px solid #ccc", padding: 15, borderRadius: 6, marginBottom: 10 },
-  btn: { padding: 8, marginRight: 5, cursor: "pointer", color: "#fff", border: "none", borderRadius: 4 },
+  container: { 
+    padding: 20, 
+    width: "90%", 
+    margin: "auto", 
+    fontFamily: "Arial", 
+    textAlign: "center" 
+  },
+  card: { 
+    border: "1px solid #ccc", 
+    padding: 15, 
+    borderRadius: 6, 
+    marginBottom: 10, 
+    backgroundColor: "#f9f9f9" 
+  },
+  name: {
+    fontWeight: "bold", 
+    fontSize: "18px",
+    marginBottom: "5px"
+  },
+  age: {
+    fontSize: "16px", 
+    color: "#555", 
+    marginBottom: "5px"
+  },
+  gender: {
+    fontSize: "16px", 
+    color: "#555", 
+    marginBottom: "5px"
+  },
+  bio: {
+    fontSize: "14px", 
+    color: "#333", 
+    marginBottom: "10px", 
+    fontStyle: "italic"
+  },
+  buttonContainer: {
+    display: "flex", 
+    justifyContent: "space-between", 
+    marginTop: "10px"
+  },
+  btn: { 
+    padding: "10px 20px", 
+    cursor: "pointer", 
+    color: "#fff", 
+    border: "none", 
+    borderRadius: 4, 
+    fontSize: "16px"
+  },
 };

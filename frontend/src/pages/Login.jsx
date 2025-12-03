@@ -9,12 +9,19 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
-    console.log(email,password)
+    try {
+    
+    await dispatch(loginUser({ email, password }));
+    console.log("Login successful:", email, password);
     setEmail("");
-    setPassword('');
+    setPassword("");
+    
+  } catch (error) {
+    console.error("Login failed:", error);
+   
+  }
   };
 
   return (
