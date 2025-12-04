@@ -127,7 +127,7 @@ exports.getConnections = async (req, res) => {
    
     const friends = connections
       .map(conn => {
-        if (!conn.fromUser || !conn.toUser) return null; // skip deleted users
+        if (!conn.fromUser || !conn.toUser) return null; 
         return conn.fromUser._id.toString() === userId ? conn.toUser : conn.fromUser;
       })
       .filter(friend => friend && !ignored.includes(friend._id.toString()));

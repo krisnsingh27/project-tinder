@@ -2,12 +2,6 @@ const User = require("../models/User");
 const Connection = require("../models/Connection")
 
 
-
-
-
-
-
-
 exports.getFeed = async (req, res) => {
   try {
     const meId = req.user.id;
@@ -34,7 +28,7 @@ exports.getFeed = async (req, res) => {
 
     
     const others = await User.find({ _id: { $nin: excludeList } })
-      .select("name age gender bio hobbies");
+      .select("name age gender bio hobby");
 
     
     const shuffled = others.sort(() => Math.random() - 0.5);
@@ -50,7 +44,7 @@ exports.getFeed = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
   try {
-    console.log(req.user)
+    // console.log(req.user)
     res.json({ message: "User fetched", data: req.user });
   } catch (err) {
     res.status(500).json({ error: err.message });

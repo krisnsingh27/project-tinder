@@ -29,7 +29,7 @@ const Signup = () => {
     try {
       const payload = {
         ...formData,
-        hobbies: formData.hobbies.split(",").map((hobby) => hobby.trim()),
+        hobby: formData.hobbies.split(",").map((hobby) => hobby.trim()),
       };
      
 
