@@ -5,6 +5,9 @@ import { fetchUser, updateUser, deleteUser } from "../features/profileSlice";
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const { user, loading } = useSelector((state) => state.profile);
+
+  const [editMode, setEditMode] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,14 +18,11 @@ const ProfilePage = () => {
 
   useEffect(() => {
     dispatch(fetchUser());
-     
   }, [dispatch]);
- 
 
   useEffect(() => {
     if (user)
       setFormData({
-       
         name: user.name,
         email: user.email,
         bio: user.bio || "",
@@ -48,15 +48,11 @@ const ProfilePage = () => {
   if (loading) return <p>Loading...</p>;
   if (!user) return <p>No user found</p>;
 
- 
-  
-
-
-
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Profile</h1>
 
+     
       <div style={styles.formGroup}>
         <label htmlFor="name" style={styles.label}>
           Name:
@@ -67,7 +63,12 @@ const ProfilePage = () => {
           type="text"
           value={formData.name}
           onChange={handleChange}
-          style={styles.input}
+          disabled={!editMode}
+          style={{
+            ...styles.input,
+            backgroundColor: !editMode ? "#eee" : "#fff",
+            cursor: !editMode ? "not-allowed" : "text",
+          }}
           placeholder="Your full name"
         />
       </div>
@@ -82,7 +83,12 @@ const ProfilePage = () => {
           type="email"
           value={formData.email}
           onChange={handleChange}
-          style={styles.input}
+          disabled={!editMode}
+          style={{
+            ...styles.input,
+            backgroundColor: !editMode ? "#eee" : "#fff",
+            cursor: !editMode ? "not-allowed" : "text",
+          }}
           placeholder="Your email address"
         />
       </div>
@@ -97,7 +103,12 @@ const ProfilePage = () => {
           name="age"
           value={formData.age}
           onChange={handleChange}
-          style={styles.input}
+          disabled={!editMode}
+          style={{
+            ...styles.input,
+            backgroundColor: !editMode ? "#eee" : "#fff",
+            cursor: !editMode ? "not-allowed" : "text",
+          }}
           placeholder="Your age"
           min={0}
         />
@@ -112,7 +123,12 @@ const ProfilePage = () => {
           name="gender"
           value={formData.gender}
           onChange={handleChange}
-          style={styles.select}
+          disabled={!editMode}
+          style={{
+            ...styles.select,
+            backgroundColor: !editMode ? "#eee" : "#fff",
+            cursor: !editMode ? "not-allowed" : "pointer",
+          }}
           required
         >
           <option value="">Select gender</option>
@@ -131,34 +147,46 @@ const ProfilePage = () => {
           name="bio"
           value={formData.bio}
           onChange={handleChange}
-          style={styles.textarea}
+          disabled={!editMode}
+          style={{
+            ...styles.textarea,
+            backgroundColor: !editMode ? "#eee" : "#fff",
+            cursor: !editMode ? "not-allowed" : "text",
+          }}
           placeholder="Write something about yourself..."
           rows="4"
         />
       </div>
 
+      
       <div style={styles.buttonContainer}>
-        <button
-          onClick={handleUpdate}
-          style={styles.updateButton}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor = styles.updateButtonHover.backgroundColor)
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor = styles.updateButton.backgroundColor)
-          }
-        >
-          Update Profile
-        </button>
+        
+        {!editMode && (
+          <button
+            onClick={() => setEditMode(true)}
+            style={styles.editButton}
+          >
+            Edit Profile
+          </button>
+        )}
+
+     
+        {editMode && (
+          <button
+            onClick={() => {
+              handleUpdate();
+              setEditMode(false);
+            }}
+            style={styles.updateButton}
+          >
+            Save Changes
+          </button>
+        )}
+
+        
         <button
           onClick={handleDelete}
           style={styles.deleteButton}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor = styles.deleteButtonHover.backgroundColor)
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor = styles.deleteButton.backgroundColor)
-          }
         >
           Delete Profile
         </button>
@@ -168,99 +196,100 @@ const ProfilePage = () => {
 };
 
 const styles = {
-    container: {
-      maxWidth: "600px",
-      margin: "40px auto",
-      padding: "20px",
-      backgroundColor: "#f9f9f9",
-      borderRadius: "10px",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    },
-    heading: {
-      textAlign: "center",
-      color: "#333",
-      marginBottom: "25px",
-      fontWeight: "700",
-      fontSize: "2rem",
-    },
-    formGroup: {
-      marginBottom: "15px",
-      display: "flex",
-      flexDirection: "column",
-    },
-    label: {
-      marginBottom: "6px",
-      fontWeight: "600",
-      color: "#555",
-      fontSize: "1rem",
-    },
-    input: {
-      padding: "10px 15px",
-      fontSize: "1rem",
-      borderRadius: "6px",
-      border: "1.5px solid #ccc",
-      outline: "none",
-      transition: "border-color 0.3s",
-    },
-    inputFocus: {
-      borderColor: "#ff4d6d",
-      boxShadow: "0 0 8px rgba(255, 77, 109, 0.3)",
-    },
-    textarea: {
-      minHeight: "70px",
-      padding: "10px 15px",
-      fontSize: "1rem",
-      borderRadius: "6px",
-      border: "1.5px solid #ccc",
-      resize: "vertical",
-      outline: "none",
-      transition: "border-color 0.3s",
-    },
-    select: {
-      padding: "10px 15px",
-      fontSize: "1rem",
-      borderRadius: "6px",
-      border: "1.5px solid #ccc",
-      outline: "none",
-      transition: "border-color 0.3s",
-      backgroundColor: "#fff",
-    },
-    buttonContainer: {
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "30px",
-      gap: "15px",
-    },
-    updateButton: {
-      padding: "12px 30px",
-      backgroundColor: "#ff4d6d",
-      color: "#fff",
-      border: "none",
-      borderRadius: "8px",
-      cursor: "pointer",
-      fontWeight: "600",
-      fontSize: "1rem",
-      transition: "background-color 0.3s",
-    },
-    updateButtonHover: {
-      backgroundColor: "#e94360",
-    },
-    deleteButton: {
-      padding: "12px 30px",
-      backgroundColor: "#ff6b6b",
-      color: "#fff",
-      border: "none",
-      borderRadius: "8px",
-      cursor: "pointer",
-      fontWeight: "600",
-      fontSize: "1rem",
-      transition: "background-color 0.3s",
-    },
-    deleteButtonHover: {
-      backgroundColor: "#d94848",
-    },
-  };
-
+  container: {
+    maxWidth: "600px",
+    margin: "40px auto",
+    padding: "20px",
+    backgroundColor: "#f9f9f9",
+    borderRadius: "10px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  },
+  heading: {
+    textAlign: "center",
+    color: "#333",
+    marginBottom: "25px",
+    fontWeight: "700",
+    fontSize: "2rem",
+  },
+  formGroup: {
+    marginBottom: "15px",
+    display: "flex",
+    flexDirection: "column",
+  },
+  label: {
+    marginBottom: "6px",
+    fontWeight: "600",
+    color: "#555",
+    fontSize: "1rem",
+  },
+  input: {
+    padding: "10px 15px",
+    fontSize: "1rem",
+    borderRadius: "6px",
+    border: "1.5px solid #ccc",
+    outline: "none",
+    transition: "border-color 0.3s",
+  },
+  textarea: {
+    minHeight: "70px",
+    padding: "10px 15px",
+    fontSize: "1rem",
+    borderRadius: "6px",
+    border: "1.5px solid #ccc",
+    resize: "vertical",
+    outline: "none",
+    transition: "border-color 0.3s",
+  },
+  select: {
+    padding: "10px 15px",
+    fontSize: "1rem",
+    borderRadius: "6px",
+    border: "1.5px solid #ccc",
+    outline: "none",
+    transition: "border-color 0.3s",
+    backgroundColor: "#fff",
+  },
+  buttonContainer: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "30px",
+    gap: "15px",
+  },
+  editButton: {
+    padding: "12px 30px",
+    backgroundColor: "#4d79ff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: "600",
+    fontSize: "1rem",
+    transition: "background-color 0.3s",
+  },
+  updateButton: {
+    padding: "12px 30px",
+    backgroundColor: "#ff4d6d",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: "600",
+    fontSize: "1rem",
+    transition: "background-color 0.3s",
+  },
+  deleteButton: {
+    padding: "12px 30px",
+    backgroundColor: "#ff6b6b",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: "600",
+    fontSize: "1rem",
+    transition: "background-color 0.3s",
+  },
+};
 
 export default ProfilePage;
+
