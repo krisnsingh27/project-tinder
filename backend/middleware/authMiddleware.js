@@ -6,10 +6,6 @@ module.exports = async (req, res, next) => {
 
     let token = req.cookies.token;
 
-
-
-
-
     try {
         if (!token) {
             throw new Error("you are no authorized")
